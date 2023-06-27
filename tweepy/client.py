@@ -727,7 +727,8 @@ class Client(BaseClient):
         place_id=None, media_ids=None, media_tagged_user_ids=None,
         poll_duration_minutes=None, poll_options=None, quote_tweet_id=None,
         exclude_reply_user_ids=None, in_reply_to_tweet_id=None,
-        reply_settings=None, text=None, user_auth=True
+        reply_settings=None, text=None, user_auth=True,
+        card_uri=None
     ):
         """Creates a Tweet on behalf of an authenticated user.
 
@@ -776,6 +777,11 @@ class Client(BaseClient):
             ``media.media_ids`` is not present.
         user_auth : bool
             Whether or not to use OAuth 1.0a User Context to authenticate
+        card_uri : str
+            Card Uri Parameter to be used for rendering a Card element.
+            This is mutually exclusive from Quote Tweet Id, Poll, Media, and Direct Message Deep Link.
+            See: https://api.twitter.com/2/openapi.json
+
 
         Returns
         -------
@@ -831,6 +837,9 @@ class Client(BaseClient):
 
         if text is not None:
             json["text"] = text
+
+        if card_uri is not None:
+            json["card_uri"] = card_uri
 
         return self._make_request(
             "POST", f"/2/tweets", json=json, user_auth=user_auth
